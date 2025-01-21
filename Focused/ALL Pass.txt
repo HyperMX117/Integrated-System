@@ -1,0 +1,14 @@
+                         : : : : : LOGIN DETAILS : : : : : 
+
+
+Login Admin      Username : admin
+                 Password : admin
+
+
+
+Login User       Username : allenhairless@gmail.com
+                 Password : tenorio
+
+
+
+

@@ -1,0 +1,11 @@
+1. open transfer in htdocs
+2. open xammp
+3. import hostel.sql in localhost/phpmyadmin
+
+group members:
+Edishan Lee Tenorio
+Marc Andrei Nisperas
+Paulo Ramos
+Chris Wendell Flaviano
+JV recierdo
+Mykel Estora

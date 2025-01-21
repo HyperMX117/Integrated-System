@@ -1,0 +1,181 @@
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", Helvetica, Arial, Lucida, sans-serif;
+  font-size: 1rem;
+}
+:root {
+  --text: white;
+}
+
+header {
+  width: 100%;
+  height: 90vh;
+  background-image: url("images/bgbg.jpg");
+  color: rgba(0, 0, 0, 0.7);
+  background-size: cover;
+  background-position: center;
+  z-index: -1;
+}
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding-block: 0.2rem;
+}
+nav {
+  backdrop-filter: blur(5px);
+  transition: all 500ms;
+  top: 30px;
+  position: absolute;
+}
+nav:hover,
+.nav-scrolled {
+  background: whitesmoke;
+}
+.nav-transparent {
+  background: transparent;
+}
+.logo img {
+  width: 100px;
+  height: 80px;
+}
+nav li {
+  list-style-type: none;
+  margin-right: 2cm;
+}
+nav a {
+  color: black !important;
+}
+
+.dropdown-menu {
+  background: #495057 !important;
+  border-radius: 0 !important;
+  border-top: 2px solid #e85d04 !important;
+}
+.dropdown-menu .dropdown-item {
+  height: 130px;
+  color: white;
+  text-align: center;
+  transition: all 300ms;
+}
+.dropdown-menu img {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+}
+.dropdown-menu .dropdown-item:hover {
+  background: none;
+  color: white;
+  opacity: 0.8;
+}
+
+.modal-header {
+  position: relative;
+}
+.modal-header button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+.modal-content img {
+  width: 100% !important;
+  height: 200px !important;
+  object-fit: cover;
+  border-radius: 5px;
+}
+.modal-title {
+  font-weight: bold !important;
+  text-align: center !important;
+}
+.modal-header button {
+  border: none !important;
+  background: none;
+}
+.modal-body form {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 20px;
+}
+.modal-body button {
+  background: #e85d04;
+  border: none;
+  color: white;
+}
+.modal-body button:hover {
+  /* background: color-mix(in srgb, #e85d04, black 20%);*/
+  opacity: 0.5;
+  background-color: #e85d04;
+}
+
+@media (max-width: 992px) {
+  .dropdown-menu img {
+    width: 100%;
+  }
+  .call-book li {
+    width: 100%;
+  }
+}
+
+.overlay-container {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.overlay-text {
+  color: white;
+  text-align: center;
+  background-color: rgba(196, 176, 119, 0.5);
+  padding: 20px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  font-family: "Oswald", sans-serif;
+  width: 200px;
+}
+
+.overlay-text:hover {
+  background-color: rgba(94, 169, 103, 0.8);
+}
+
+.overlay-tile {
+  position: absolute;
+  top: 45%;
+  left: 65%;
+  transform: translate(-50%, -50%);
+  padding: 40px;
+  color: white;
+  font-weight: bolder;
+}
+
+.slant-title {
+  font-size: 100px;
+  font-style: italic;
+  margin: 0;
+}
+
+.orange-text,
+.big-text {
+  margin: 0;
+  font-size: 40px;
+  font-weight: bold;
+}
+
+.orange-text {
+  color: orange;
+}
+
+.call-book ul {
+  display: flex;
+}
+
+.call-book li {
+  margin-right: 1cm;
+}
