@@ -56,7 +56,7 @@ return true;
 
 				<div class="row">
 					<div class="col-md-12">
-					
+					<br>
 						<h2 class="page-title">User Registration </h2>
 
 						<div class="row">

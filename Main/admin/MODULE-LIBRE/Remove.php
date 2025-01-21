@@ -4,11 +4,11 @@ ob_start(); // Start output buffering
 $server = "localhost";
 $user = "root";
 $password = "";
-$ourdb = "SAMPLEONE";
+$ourdb = "integrateddb";
 
-$tulay = mysqli_connect($server, $user, $password, $ourdb);
+$dbConnection = mysqli_connect($server, $user, $password, $ourdb);
 
-if (!$tulay) {
+if (!$dbConnection) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
@@ -16,41 +16,35 @@ $success_message = "";
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $updateRow = $_POST["IDnumber"];
-    $codeitem = $_POST["itemm"];
-    $codeprice = $_POST["pricee"];
-    $codeserial = $_POST["seriall"];
-    $codedescription = $_POST["descriptionn"];
-    $codestock = $_POST["stockk"];
+    $removeRow = $_POST["IDnumber"];
 
-    // Validate ID input
-    if (!is_numeric($updateRow)) {
+    if (!is_numeric($removeRow)) {
         $error_message = "Invalid ID. Please enter a number.";
     } else {
         // Use prepared statements to prevent SQL injection
-        $stmt = mysqli_prepare($tulay, "UPDATE Store SET ITEM=?, PRICE_IN_PESO=?, SERIAL_NUMBER=?, DESCRIPTION=?, STOCK_QUANTITY=? WHERE ID=?");
+        $stmt = mysqli_prepare($dbConnection, "DELETE FROM Store WHERE ID=?");
 
         if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "sdsssd", $codeitem, $codeprice, $codeserial, $codedescription, $codestock, $updateRow);
+            mysqli_stmt_bind_param($stmt, "i", $removeRow); // "i" for integer
 
             if (mysqli_stmt_execute($stmt)) {
-                if(mysqli_stmt_affected_rows($stmt) > 0) {
-                    $success_message = "Item updated successfully!";
+                if (mysqli_stmt_affected_rows($stmt) > 0) {
+                    $success_message = "Item removed successfully!";
                 } else {
-                    $error_message = "No rows updated. Check if the ID exists.";
+                    $error_message = "No item found with that ID.";
                 }
             } else {
-                $error_message = "Error updating item: " . mysqli_error($tulay);
+                $error_message = "Error removing item: " . mysqli_error($dbConnection);
             }
 
             mysqli_stmt_close($stmt);
         } else {
-            $error_message = "Error preparing statement: " . mysqli_error($tulay);
+            $error_message = "Error preparing statement: " . mysqli_error($dbConnection);
         }
     }
 }
 
-mysqli_close($tulay);
+mysqli_close($dbConnection);
 ?>
 
 <!DOCTYPE html>
@@ -58,7 +52,7 @@ mysqli_close($tulay);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Change Item</title>
+    <title>Remove Item</title>
     <style>
         body {
             background: url('shop.jpg') no-repeat center center fixed;
@@ -96,7 +90,7 @@ mysqli_close($tulay);
             font-size: 16px;
             text-transform: uppercase;
         }
-                form input[type="submit"]{
+        form input[type="submit"]{
             width: 100%;
             padding: 10px;
             background-color: mintcream;
@@ -140,26 +134,10 @@ mysqli_close($tulay);
 <div class="return-button">
 <a href="Inventory.php"><button>Return to Inventory</button></a>
 </div>
-    <h1>STOCK INVENTORY: CHANGE</h1>
-    <form action="Change.php" method="post">
-        <label for="IDnumber">Input ID to Update Row</label>
+    <h1>STOCK INVENTORY: REMOVE</h1>
+    <form action="Remove.php" method="post">
+        <label for="IDnumber">What ID must be selected to remove row</label>
         <input type="text" name="IDnumber" id="IDnumber" required>
-
-        <label for="itemm">Input New Item</label>
-        <input type="text" name="itemm" id="itemm" required>
-
-        <label for="pricee">Input New Price in Peso</label>
-        <input type="text" name="pricee" id="pricee" required>
-
-        <label for="seriall">Input New Serial Number</label>
-        <input type="text" name="seriall" id="seriall" required>
-
-        <label for="descriptionn">Input New Description</label>
-        <input type="text" name="descriptionn" id="descriptionn" required>
-
-        <label for="stockk">Input New Stock Quantity</label>
-        <input type="text" name="stockk" id="stockk" required>
-
         <input type="submit" value="Confirm">
          <?php if ($success_message): ?>
             <div class="message success"><?php echo $success_message; ?></div>

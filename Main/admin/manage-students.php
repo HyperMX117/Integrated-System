@@ -4,20 +4,22 @@ include('includes/config.php');
 include('includes/checklogin.php');
 check_login();
 
-if(isset($_GET['del'])) {
+// Delete student record
+if (isset($_GET['del'])) {
     $id = intval($_GET['del']);
-    $adn = "delete from userregistration where id=?"; // Corrected table name
-    $stmt = $mysqli->prepare($adn);
-    $stmt->bind_param('i', $id);
-    $stmt->execute();
-    $stmt->close();
-    echo "<script>alert('Data Deleted');</script>";
-    echo "<script>window.location.href = 'manage-students.php';</script>"; // Redirect after delete
+    $adn = "DELETE FROM userregistration WHERE id=?"; // Corrected table name
+    if ($stmt = $mysqli->prepare($adn)) {
+        $stmt->bind_param('i', $id);
+        $stmt->execute();
+        $stmt->close();
+        echo "<script>alert('Data Deleted');</script>";
+        echo "<script>window.location.href = 'manage-students.php';</script>"; // Redirect after delete
+    }
 }
 ?>
+
 <!doctype html>
 <html lang="en" class="no-js">
-
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -25,7 +27,8 @@ if(isset($_GET['del'])) {
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="theme-color" content="#3e454c">
-    <title>Manage Students</title> <link rel="stylesheet" href="css/font-awesome.min.css">
+    <title>Manage Students</title>
+    <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/dataTables.bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-social.css">
@@ -33,19 +36,15 @@ if(isset($_GET['del'])) {
     <link rel="stylesheet" href="css/fileinput.min.css">
     <link rel="stylesheet" href="css/awesome-bootstrap-checkbox.css">
     <link rel="stylesheet" href="css/style.css">
-    <script language="javascript" type="text/javascript">
+    <script type="text/javascript">
         var popUpWin = 0;
 
         function popUpWindow(URLStr, left, top, width, height) {
-            if (popUpWin) {
-                if (!popUpWin.closed) popUpWin.close();
-            }
-            popUpWin = open(URLStr, 'popUpWin', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,copyhistory=yes,width=' + 510 + ',height=' + 430 + ',left=' + left + ', top=' + top + ',screenX=' + left + ',screenY=' + top + '');
+            if (popUpWin && !popUpWin.closed) popUpWin.close();
+            popUpWin = open(URLStr, 'popUpWin', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=no,copyhistory=yes,width=510,height=430,left=${left},top=${top},screenX=${left},screenY=${top}`);
         }
     </script>
-
 </head>
-
 <body>
     <?php include('includes/header.php'); ?>
 
@@ -55,6 +54,7 @@ if(isset($_GET['del'])) {
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-md-12">
+                    <br><br>
                         <h2 class="page-title">Manage Students</h2>
                         <div class="panel panel-default">
                             <div class="panel-heading">Student Details</div>
@@ -86,29 +86,34 @@ if(isset($_GET['del'])) {
                                     </tfoot>
                                     <tbody>
                                         <?php
-                                        $ret = "select * from userregistration"; // Corrected table name
-                                        $stmt = $mysqli->prepare($ret);
-                                        $stmt->execute();
-                                        $res = $stmt->get_result();
-                                        $cnt = 1;
-                                        while ($row = $res->fetch_object()) {
-                                            ?>
-                                            <tr>
-                                                <td><?php echo $cnt; ?></td>
-                                                <td><?php echo $row->firstName; ?></td>
-                                                <td><?php echo $row->lastName; ?></td>
-                                                <td><?php echo $row->gender; ?></td>
-                                                <td><?php echo $row->contactNo; ?></td>
-                                                <td><?php echo $row->email; ?></td>
-                                                <td><?php echo $row->regDate; ?></td>
-                                                <td>
-                                                    <a href="javascript:void(0);" onClick="popUpWindow('http://localhost/hostel/admin/full-profile.php?id=<?php echo $row->id; ?>');" title="View Full Details"><i class="fa fa-desktop"></i></a>&nbsp;&nbsp;
-                                                    <a href="manage-students.php?del=<?php echo $row->id; ?>" title="Delete Record" onclick="return confirm('Do you want to delete?');"><i class="fa fa-close"></i></a>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            $cnt = $cnt + 1;
-                                        } ?>
+                                        $ret = "SELECT * FROM userregistration"; // Corrected table name
+                                        if ($stmt = $mysqli->prepare($ret)) {
+                                            $stmt->execute();
+                                            $res = $stmt->get_result();
+                                            $cnt = 1;
+                                            while ($row = $res->fetch_object()) {
+                                                echo "<tr>
+                                                    <td>{$cnt}</td>
+                                                    <td>{$row->firstName}</td>
+                                                    <td>{$row->lastName}</td>
+                                                    <td>{$row->gender}</td>
+                                                    <td>{$row->contactNo}</td>
+                                                    <td>{$row->email}</td>
+                                                    <td>{$row->regDate}</td>
+                                                    <td>
+                                                        <a href='javascript:void(0);' onClick='popUpWindow(\"full-profile.php?id={$row->id}\");' title='View Full Details'>
+                                                            <i class='fa fa-desktop'></i>
+                                                        </a>&nbsp;&nbsp;
+                                                        <a href='manage-students.php?del={$row->id}' title='Delete Record' onclick='return confirm(\"Do you want to delete?\");'>
+                                                            <i class='fa fa-close'></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>";
+                                                $cnt++;
+                                            }
+                                            $stmt->close();
+                                        }
+                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -128,7 +133,5 @@ if(isset($_GET['del'])) {
     <script src="js/fileinput.js"></script>
     <script src="js/chartData.js"></script>
     <script src="js/main.js"></script>
-
 </body>
-
 </html>

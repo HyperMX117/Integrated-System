@@ -4,11 +4,11 @@ ob_start(); // Start output buffering
 $server = "localhost";
 $user = "root";
 $password = "";
-$ourdb = "SAMPLEONE";
+$ourdb = "integrateddb";
 
-$tulay = mysqli_connect($server, $user, $password, $ourdb);
+$dbConnection = mysqli_connect($server, $user, $password, $ourdb);
 
-if (!$tulay) {
+if (!$dbConnection) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $error_message = "Please enter an item name to search.";
     } else {
         // Use prepared statements to prevent SQL injection (CRITICAL)
-        $stmt = mysqli_prepare($tulay, "SELECT * FROM Store WHERE ITEM LIKE ?");
+        $stmt = mysqli_prepare($dbConnection, "SELECT * FROM Store WHERE ITEM LIKE ?");
         $searchPattern = "%" . $searchRow . "%"; // Add wildcards for LIKE
         mysqli_stmt_bind_param($stmt, "s", $searchPattern);
 
@@ -37,12 +37,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             }
             mysqli_stmt_close($stmt);
         } else {
-            $error_message = "Error executing query: " . mysqli_error($tulay);
+            $error_message = "Error executing query: " . mysqli_error($dbConnection);
         }
     }
 }
 
-mysqli_close($tulay);
+mysqli_close($dbConnection);
 ?>
 
 <!DOCTYPE html>

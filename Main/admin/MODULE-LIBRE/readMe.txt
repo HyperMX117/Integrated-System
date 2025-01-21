@@ -8,9 +8,9 @@ password: sample2
 -------------------------------------------------------------------------------------
 
 
-CREATE DATABASE sampleone;
+CREATE DATABASE integrateddb;
 
-USE sampleone;
+USE integrateddb;
 
 CREATE TABLE store (
     ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT,

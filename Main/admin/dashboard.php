@@ -39,7 +39,7 @@ check_login();
 
 				<div class="row">
 					<div class="col-md-12">
-
+						<br><br>
 						<h2 class="page-title">Dashboard</h2>
 
 						<div class="row">
@@ -60,7 +60,7 @@ $stmt->close();
 ?>
 
 													<div class="stat-panel-number h1 "><?php echo $count;?></div>
-													<div class="stat-panel-title text-uppercase"> Users</div>
+													<div class="stat-panel-title text-uppercase"> Students</div>
 												</div>
 											</div>
 											<a href="manage-students.php" class="block-anchor panel-footer">Full Detail <i class="fa fa-arrow-right"></i></a>
@@ -203,7 +203,7 @@ $stmt2->close();
 </body>
 
 <div class="foot"><footer>
-<p>Copyright © 2019 Hostel Managment. All rights reserved.</p>
+<p>Copyright © 2025 Hostel Managment. All rights reserved.</p>
 </footer> </div>
 
 

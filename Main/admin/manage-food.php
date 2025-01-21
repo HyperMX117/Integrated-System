@@ -45,6 +45,7 @@ if(isset($_GET['del']))
 			<div class="container-fluid">
 				<div class="row">
 					<div class="col-md-12">
+					<br><br>
 						<h2 class="page-title">Manage Foods</h2>
 						<div class="panel panel-default">
 							<div class="panel-heading">All Foods Details</div>

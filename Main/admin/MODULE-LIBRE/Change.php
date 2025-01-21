@@ -1,14 +1,12 @@
 <?php
 ob_start(); // Start output buffering
 
-$server = "localhost";
-$user = "root";
-$password = "";
-$ourdb = "SAMPLEONE";
+include('includes/config.php');
+include('includes/checklogin.php');
 
-$tulay = mysqli_connect($server, $user, $password, $ourdb);
+$dbConnection = mysqli_connect($host, $dbuser, $dbpass, $db);
 
-if (!$tulay) {
+if (!$dbConnection) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
@@ -16,31 +14,41 @@ $success_message = "";
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $updateRow = $_POST["IDnumber"];
     $codeitem = $_POST["itemm"];
     $codeprice = $_POST["pricee"];
     $codeserial = $_POST["seriall"];
     $codedescription = $_POST["descriptionn"];
     $codestock = $_POST["stockk"];
 
-    // Use prepared statements to prevent SQL injection
-    $stmt = mysqli_prepare($tulay, "INSERT INTO Store (ITEM, PRICE_IN_PESO, SERIAL_NUMBER, DESCRIPTION, STOCK_QUANTITY) VALUES (?, ?, ?, ?, ?)");
-
-    if ($stmt) { // Check if prepare was successful
-        mysqli_stmt_bind_param($stmt, "sdssd", $codeitem, $codeprice, $codeserial, $codedescription, $codestock); // "s" for string, "d" for double
-
-        if (mysqli_stmt_execute($stmt)) {
-            $success_message = "Item added successfully!";
-        } else {
-            $error_message = "Error adding item: " . mysqli_error($tulay);
-        }
-
-        mysqli_stmt_close($stmt);
+    // Validate ID input
+    if (!is_numeric($updateRow)) {
+        $error_message = "Invalid ID. Please enter a number.";
     } else {
-        $error_message = "Error preparing statement: " . mysqli_error($tulay);
+        // Use prepared statements to prevent SQL injection
+        $stmt = mysqli_prepare($dbConnection, "UPDATE Store SET ITEM=?, PRICE_IN_PESO=?, SERIAL_NUMBER=?, DESCRIPTION=?, STOCK_QUANTITY=? WHERE ID=?");
+
+        if ($stmt) {
+            mysqli_stmt_bind_param($stmt, "sdsssd", $codeitem, $codeprice, $codeserial, $codedescription, $codestock, $updateRow);
+
+            if (mysqli_stmt_execute($stmt)) {
+                if(mysqli_stmt_affected_rows($stmt) > 0) {
+                    $success_message = "Item updated successfully!";
+                } else {
+                    $error_message = "No rows updated. Check if the ID exists.";
+                }
+            } else {
+                $error_message = "Error updating item: " . mysqli_error($dbConnection);
+            }
+
+            mysqli_stmt_close($stmt);
+        } else {
+            $error_message = "Error preparing statement: " . mysqli_error($dbConnection);
+        }
     }
 }
 
-mysqli_close($tulay);
+mysqli_close($dbConnection);
 ?>
 
 <!DOCTYPE html>
@@ -48,36 +56,36 @@ mysqli_close($tulay);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Item</title>
+    <title>Change Item</title>
     <style>
         body {
             background: url('shop.jpg') no-repeat center center fixed;
             background-size: cover;
-            font-family: sans-serif; /* Added a default font */
+            font-family: sans-serif;
             display: flex;
             flex-direction: column;
             min-height: 100vh;
             margin: 0;
-            justify-content: center; /* Center vertically */
-            align-items: center; /* Center horizontally */
+            justify-content: center;
+            align-items: center;
         }
 
         form {
             width: 300px;
             background: rgba(0, 0, 0, 0.5);
-            padding: 30px; /* Reduced padding */
-            border-radius: 8px; /* Added border-radius */
-            box-sizing: border-box; /* Include padding in width */
+            padding: 30px;
+            border-radius: 8px;
+            box-sizing: border-box;
         }
 
         form label {
             display: block;
             color: white;
             text-transform: uppercase;
-            margin-bottom: 5px; /* Added spacing between label and input */
+            margin-bottom: 5px;
         }
 
-        form input[type="text"] { /* Style only text inputs */
+        form input[type="text"] {
             width: 100%;
             padding: 8px;
             margin-bottom: 10px;
@@ -86,7 +94,7 @@ mysqli_close($tulay);
             font-size: 16px;
             text-transform: uppercase;
         }
-        form input[type="submit"]{
+                form input[type="submit"]{
             width: 100%;
             padding: 10px;
             background-color: mintcream;
@@ -99,7 +107,7 @@ mysqli_close($tulay);
             font-size: 45px;
             color: mintcream;
             text-transform: uppercase;
-            text-align: center; /* Center the heading */
+            text-align: center;
             margin-bottom: 20px;
         }
         .message{
@@ -130,26 +138,28 @@ mysqli_close($tulay);
 <div class="return-button">
 <a href="Inventory.php"><button>Return to Inventory</button></a>
 </div>
-    <h1>STOCK INVENTORY: ADD</h1>
+    <h1>STOCK INVENTORY: CHANGE</h1>
+    <form action="Change.php" method="post">
+        <label for="IDnumber">Input ID to Update Row</label>
+        <input type="text" name="IDnumber" id="IDnumber" required>
 
-    <form action="Add.php" method="post">
-        <label for="itemm">Input Item</label>
+        <label for="itemm">Input New Item</label>
         <input type="text" name="itemm" id="itemm" required>
 
-        <label for="pricee">Input Price in Peso</label>
+        <label for="pricee">Input New Price in Peso</label>
         <input type="text" name="pricee" id="pricee" required>
 
-        <label for="seriall">Input Serial Number</label>
+        <label for="seriall">Input New Serial Number</label>
         <input type="text" name="seriall" id="seriall" required>
 
-        <label for="descriptionn">Input Description</label>
+        <label for="descriptionn">Input New Description</label>
         <input type="text" name="descriptionn" id="descriptionn" required>
 
-        <label for="stockk">Input Stock Quantity</label>
+        <label for="stockk">Input New Stock Quantity</label>
         <input type="text" name="stockk" id="stockk" required>
 
         <input type="submit" value="Confirm">
-        <?php if ($success_message): ?>
+         <?php if ($success_message): ?>
             <div class="message success"><?php echo $success_message; ?></div>
         <?php elseif ($error_message): ?>
             <div class="message error"><?php echo $error_message; ?></div>

@@ -2,6 +2,6 @@
 $dbuser="root";
 $dbpass="";
 $host="localhost";
-$db="hostel1";
+$db="integrateddb";
 $mysqli =new mysqli($host,$dbuser, $dbpass, $db);
 ?>

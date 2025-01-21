@@ -47,7 +47,7 @@ echo"<script>alert('Room Details has been Updated successfully');</script>";
 
 				<div class="row">
 					<div class="col-md-12">
-					
+						<br><br>
 						<h2 class="page-title">Edit Room Details </h2>
 	
 						<div class="row">

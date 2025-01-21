@@ -236,8 +236,8 @@ class PHPExcel_IOFactory
 				case 'xlt':				//	Excel (BIFF) Template
 					$extensionType = 'Excel5';
 					break;
-				case 'ods':				//	Open/Libre Offic Calc
-				case 'ots':				//	Open/Libre Offic Calc Template
+				case 'ods':				//	Open/MODULE-LIBRE Offic Calc
+				case 'ots':				//	Open/MODULE-LIBRE Offic Calc Template
 					$extensionType = 'OOCalc';
 					break;
 				case 'slk':

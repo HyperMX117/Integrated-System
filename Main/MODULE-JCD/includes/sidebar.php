@@ -6,7 +6,7 @@
 				{ ?>
 					<li><a href="dashboard.php"><i class="fa fa-desktop"></i>Dashboard</a></li>
 					<li><a href="my-profile.php"><i class="fa fa-user"></i>Profile</a></li>
-					<li><a href="JCD/index.php"><i class="fa fa-file-o"></i>Food Menu</a></li>
+					<li><a href="MODULE-JCD/index.php"><i class="fa fa-file-o"></i>Food Menu</a></li>
 					<li><a href="dining.php"><i class="fa fa-file-o"></i>Dining</a></li>
 				<?php } else { ?>
 				

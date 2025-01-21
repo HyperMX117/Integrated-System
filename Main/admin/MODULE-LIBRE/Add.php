@@ -1,14 +1,12 @@
 <?php
 ob_start(); // Start output buffering
 
-$server = "localhost";
-$user = "root";
-$password = "";
-$ourdb = "SAMPLEONE";
+include('includes/config.php');
+include('includes/checklogin.php');
 
-$tulay = mysqli_connect($server, $user, $password, $ourdb);
+$dbConnection = mysqli_connect($host, $dbuser, $dbpass, $db);
 
-if (!$tulay) {
+if (!$dbConnection) {
     die("Connection failed: " . mysqli_connect_error());
 }
 
@@ -16,35 +14,30 @@ $success_message = "";
 $error_message = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $removeRow = $_POST["IDnumber"];
+    $codeitem = $_POST["itemm"];
+    $codeprice = $_POST["pricee"];
+    $codedescription = $_POST["descriptionn"];
+    $codestock = $_POST["stockk"];
 
-    if (!is_numeric($removeRow)) {
-        $error_message = "Invalid ID. Please enter a number.";
-    } else {
-        // Use prepared statements to prevent SQL injection
-        $stmt = mysqli_prepare($tulay, "DELETE FROM Store WHERE ID=?");
+    // Use prepared statements to prevent SQL injection
+    $stmt = mysqli_prepare($dbConnection, "INSERT INTO Store (ITEM, PRICE_IN_PESO, DESCRIPTION, STOCK_QUANTITY) VALUES (?, ?, ?, ?)");
 
-        if ($stmt) {
-            mysqli_stmt_bind_param($stmt, "i", $removeRow); // "i" for integer
+    if ($stmt) { // Check if prepare was successful
+        mysqli_stmt_bind_param($stmt, "sdss", $codeitem, $codeprice, $codedescription, $codestock); // "s" for string, "d" for double
 
-            if (mysqli_stmt_execute($stmt)) {
-                if (mysqli_stmt_affected_rows($stmt) > 0) {
-                    $success_message = "Item removed successfully!";
-                } else {
-                    $error_message = "No item found with that ID.";
-                }
-            } else {
-                $error_message = "Error removing item: " . mysqli_error($tulay);
-            }
-
-            mysqli_stmt_close($stmt);
+        if (mysqli_stmt_execute($stmt)) {
+            $success_message = "Item added successfully!";
         } else {
-            $error_message = "Error preparing statement: " . mysqli_error($tulay);
+            $error_message = "Error adding item: " . mysqli_error($dbConnection);
         }
+
+        mysqli_stmt_close($stmt);
+    } else {
+        $error_message = "Error preparing statement: " . mysqli_error($dbConnection);
     }
 }
 
-mysqli_close($tulay);
+mysqli_close($dbConnection);
 ?>
 
 <!DOCTYPE html>
@@ -52,7 +45,7 @@ mysqli_close($tulay);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remove Item</title>
+    <title>Add Item</title>
     <style>
         body {
             background: url('shop.jpg') no-repeat center center fixed;
@@ -131,20 +124,32 @@ mysqli_close($tulay);
     </style>
 </head>
 <body>
-<div class="return-button">
-<a href="Inventory.php"><button>Return to Inventory</button></a>
-</div>
-    <h1>STOCK INVENTORY: REMOVE</h1>
-    <form action="Remove.php" method="post">
-        <label for="IDnumber">What ID must be selected to remove row</label>
-        <input type="text" name="IDnumber" id="IDnumber" required>
-        <input type="submit" value="Confirm">
-         <?php if ($success_message): ?>
-            <div class="message success"><?php echo $success_message; ?></div>
-        <?php elseif ($error_message): ?>
-            <div class="message error"><?php echo $error_message; ?></div>
-        <?php endif; ?>
-    </form>
+    <?php include('includes/sidebar.php'); ?>
+    <div class= "return-button">
+    <a href="Inventory.php"><button>Return to Inventory</button></a>
+    </div>
+        <h1>STOCK INVENTORY: ADD</h1>
+
+        <form action="Add.php" method="post">
+            <label for="itemm">Item</label>
+            <input type="text" name="itemm" id="itemm" required>
+
+            <label for="pricee">Price in Peso</label>
+            <input type="text" name="pricee" id="pricee" required>
+
+            <label for="descriptionn">Description</label>
+            <input type="text" name="descriptionn" id="descriptionn" required>
+
+            <label for="stockk">Stock Quantity</label>
+            <input type="text" name="stockk" id="stockk" required>
+
+            <input type="submit" value="Confirm">
+            <?php if ($success_message): ?>
+                <div class="message success"><?php echo $success_message; ?></div>
+            <?php elseif ($error_message): ?>
+                <div class="message error"><?php echo $error_message; ?></div>
+            <?php endif; ?>
+        </form>
 </body>
 </html>
 <?php ob_end_flush(); ?>

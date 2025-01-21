@@ -23,7 +23,5 @@
 
 				<li><a href="registration.php"><i class="fa fa-user"></i>Student Registration</a></li>
 				<li><a href="manage-students.php"><i class="fa fa-users"></i>Manage Students</a></li>
-				<li><a href="libre/Inventory.php"><i class="fa fa-desktop"></i>Inventory Management</a></li>
-
-			
+				<li><a href="MODULE-LIBRE/Inventory.php"><i class="fa fa-desktop"></i>Inventory Management</a></li>
 		</nav>

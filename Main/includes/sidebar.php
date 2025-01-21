@@ -6,11 +6,11 @@
 				{ ?>
 					<li><a href="dashboard.php"><i class="fa fa-desktop"></i>Dashboard</a></li>
 					<li><a href="my-profile.php"><i class="fa fa-user"></i>Profile</a></li>
-					<li><a href="JCD/index.php"><i class="fa fa-file-o"></i>Food Menu</a></li>
+					<li><a href="MODULE-JCD/index.php"><i class="fa fa-file-o"></i>Food Menu</a></li>
 					<li><a href="dining.php"><i class="fa fa-file-o"></i>Dining</a></li>
 				<?php } else { ?>
 				
-				<li><a href="MODULE-Palenzuela - Hostel Management/student_login.php"><i class="fa fa-users"></i>Login as Student</a></li>
+				<li><a href="MODULE-PALENZUELA/student_login.php"><i class="fa fa-users"></i>Login as Student</a></li>
 				<li><a href="admin"><i class="fa fa-user"></i>Login as Admin</a></li>
 				<?php } ?>
 
